@@ -16,7 +16,7 @@ class Category(models.Model):
         to='channel.Channel', related_name='categories')
     parents = models.ManyToManyField(
         verbose_name=_('Parent category'),
-        to='category.Category', related_name='childs')
+        to='category.Category', related_name='subcategories')
 
     class Meta:
         verbose_name = _('Category')

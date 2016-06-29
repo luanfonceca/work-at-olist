@@ -38,7 +38,7 @@ class ImportCategoriesCommandTest(TestCase):
 
         books = Category.objects.get(slug='books')
         self.assertQuerysetEqual(
-            books.childs.all(),
+            books.subcategories.all(),
             ['<Category: National Literature>',
              '<Category: Foreign Literature>',
              '<Category: Computers>'],
@@ -46,7 +46,7 @@ class ImportCategoriesCommandTest(TestCase):
 
         games = Category.objects.get(slug='games')
         self.assertQuerysetEqual(
-            games.childs.all(),
+            games.subcategories.all(),
             ['<Category: XBOX 360>',
              '<Category: XBOX One>',
              '<Category: Playstation 4>'],
@@ -148,10 +148,10 @@ class ImportCategoriesCommandTest(TestCase):
 
         books = Category.objects.get(slug='books')
         self.assertQuerysetEqual(
-            books.childs.all(),
+            books.subcategories.all(),
             ['<Category: National Literature>'])
 
         national_literature = Category.objects.get(slug='national-literature')
         self.assertQuerysetEqual(
-            national_literature.childs.all(),
+            national_literature.subcategories.all(),
             ['<Category: Science Fiction>'])
