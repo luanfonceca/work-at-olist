@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # External apps
     'django_extensions',
+    'rest_framework',
 
     # Local apps
     'channel',

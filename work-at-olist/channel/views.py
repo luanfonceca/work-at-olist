@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from rest_framework import generics
 
-# Create your views here.
+from channel.models import Channel
+from channel import serializers
+
+
+class ChannelMixin(object):
+    queryset = Channel.objects.all()
+    serializer_class = serializers.ChannelSerializer
+
+
+class ChannelList(ChannelMixin, generics.ListAPIView):
+    pass
