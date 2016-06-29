@@ -67,21 +67,24 @@ class ChannelTest(APITestCase):
                 'id': 1,
                 'name': 'Books',
                 'slug': 'books',
-                'channel': 1,
+                'url': 'http://testserver/categories/books/',
+                'channel': 'http://testserver/channels/lojas-americanas/',
                 'parents': [],
                 'subcategories': [],
             }, {
                 'id': 2,
                 'name': 'Games',
                 'slug': 'games',
-                'channel': 1,
+                'url': 'http://testserver/categories/games/',
+                'channel': 'http://testserver/channels/lojas-americanas/',
                 'parents': [],
                 'subcategories': [],
             }, {
                 'id': 3,
                 'name': 'Computers',
                 'slug': 'computers',
-                'channel': 1,
+                'url': 'http://testserver/categories/computers/',
+                'channel': 'http://testserver/channels/lojas-americanas/',
                 'parents': [],
                 'subcategories': [],
             }]
@@ -105,23 +108,34 @@ class ChannelTest(APITestCase):
             'categories': [{
                 'id': 1,
                 'parents': [],
-                'subcategories': [2],
+                'subcategories': [
+                    'http://testserver/categories/national-literature/'
+                ],
                 'name': 'Books',
                 'slug': 'books',
-                'channel': 1
+                'url': 'http://testserver/categories/books/',
+                'channel': 'http://testserver/channels/lojas-americanas/'
             }, {
                 'id': 2,
-                'parents': [1],
-                'subcategories': [3],
+                'parents': [
+                    'http://testserver/categories/books/'
+                ],
+                'subcategories': [
+                    'http://testserver/categories/science-fiction/'
+                ],
                 'name': 'National Literature',
                 'slug': 'national-literature',
-                'channel': 1
+                'url': 'http://testserver/categories/national-literature/',
+                'channel': 'http://testserver/channels/lojas-americanas/'
             }, {
                 'id': 3,
-                'parents': [2],
+                'parents': [
+                    'http://testserver/categories/national-literature/'
+                ],
                 'subcategories': [],
                 'name': 'Science Fiction',
                 'slug': 'science-fiction',
-                'channel': 1
+                'url': 'http://testserver/categories/science-fiction/',
+                'channel': 'http://testserver/channels/lojas-americanas/'
             }]
         })

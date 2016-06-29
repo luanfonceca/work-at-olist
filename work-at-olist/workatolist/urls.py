@@ -6,4 +6,5 @@ urlpatterns = [
 
     # Local apps
     url(r'^channels/', include('channel.urls', namespace='channel')),
+    url(r'^categories/', include('category.urls', namespace='category')),
 ]
