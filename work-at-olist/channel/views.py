@@ -10,4 +10,8 @@ class ChannelMixin(object):
 
 
 class ChannelList(ChannelMixin, generics.ListAPIView):
-    pass
+    serializer_class = serializers.ChannelListSerializer
+
+
+class ChannelDetail(ChannelMixin, generics.RetrieveAPIView):
+    lookup_field = 'slug'

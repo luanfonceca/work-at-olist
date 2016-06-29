@@ -13,7 +13,7 @@ class ChannelTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [])
 
-    def test_list_without_categories(self):
+    def test_list(self):
         call_command(
             name='importcategories',
             channel='Lojas Americanas',
@@ -27,23 +27,42 @@ class ChannelTest(APITestCase):
             'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
-            'categories': []
+            'url': 'http://testserver/channels/lojas-americanas/'
         }])
 
-    def test_list_with_three_category(self):
+    def test_detail_without_categories(self):
+        call_command(
+            name='importcategories',
+            channel='Lojas Americanas',
+            categories_file='category/fixtures/empty.csv')
+
+        url = reverse('channel:detail', kwargs={'slug': 'lojas-americanas'})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {
+            'id': 1,
+            'name': 'Lojas Americanas',
+            'slug': 'lojas-americanas',
+            'url': 'http://testserver/channels/lojas-americanas/',
+            'categories': []
+        })
+
+    def test_detail_with_three_category(self):
         call_command(
             name='importcategories',
             channel='Lojas Americanas',
             categories_file='category/fixtures/one_level.csv')
 
-        url = reverse('channel:list')
+        url = reverse('channel:detail', kwargs={'slug': 'lojas-americanas'})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [{
+        self.assertEqual(response.data, {
             'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
+            'url': 'http://testserver/channels/lojas-americanas/',
             'categories': [{
                 'id': 1,
                 'name': 'Books',
@@ -66,22 +85,23 @@ class ChannelTest(APITestCase):
                 'parents': [],
                 'subcategories': [],
             }]
-        }])
+        })
 
-    def test_list_with_nested_categories(self):
+    def test_detail_with_nested_categories(self):
         call_command(
             name='importcategories',
             channel='Lojas Americanas',
             categories_file='category/fixtures/two_levels.csv')
 
-        url = reverse('channel:list')
+        url = reverse('channel:detail', kwargs={'slug': 'lojas-americanas'})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [{
+        self.assertEqual(response.data, {
             'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
+            'url': 'http://testserver/channels/lojas-americanas/',
             'categories': [{
                 'id': 1,
                 'parents': [],
@@ -104,4 +124,4 @@ class ChannelTest(APITestCase):
                 'slug': 'science-fiction',
                 'channel': 1
             }]
-        }])
+        })
