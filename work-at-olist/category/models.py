@@ -14,6 +14,9 @@ class Category(models.Model):
     channel = models.ForeignKey(
         verbose_name=_('Channel'),
         to='channel.Channel', related_name='categories')
+    parents = models.ManyToManyField(
+        verbose_name=_('Parent category'),
+        to='category.Category', related_name='childs')
 
     class Meta:
         verbose_name = _('Category')

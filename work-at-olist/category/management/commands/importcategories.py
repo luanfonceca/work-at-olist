@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 for row in csv_object:
                     if csv_object.line_num == 1:
                         continue
-                    self.create_category_from_row(row)
+                    self.create_category_from_row(row[0])
         except OSError as e:
             raise CommandError(e)
 
@@ -43,15 +43,19 @@ class Command(BaseCommand):
         channel, created = Channel.objects.get_or_create(name=name)
         return channel
 
-    def create_if_not_exists(self, name):
-        if Category.objects.filter(channel=self.channel, name=name).exists():
-            return
-
-        Category.objects.create(
-            channel=self.channel,
+    def get_or_create_category(self, name, parent=None):
+        category, created = Category.objects.get_or_create(
             name=name,
-        )
+            channel=self.channel)
+        if parent:
+            category.parents.add(parent)
+        return category
 
     def create_category_from_row(self, row):
-        for category in row:
-            self.create_if_not_exists(category)
+        categories = row.split(' / ')
+        parent = None
+        for category in categories:
+            parent = self.get_or_create_category(
+                name=category,
+                parent=parent
+            )
