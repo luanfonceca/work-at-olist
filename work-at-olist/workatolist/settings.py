@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'channel',
+    'category',
 ]
 
 MIDDLEWARE_CLASSES = [
