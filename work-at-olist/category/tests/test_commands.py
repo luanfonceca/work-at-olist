@@ -65,3 +65,17 @@ class ImportCategoriesCommandTest(TestCase):
              '<Category: Games>',
              '<Category: Computers>'],
             ordered=False)
+
+    def test_duplicated_categories(self):
+        call_command(
+            name='importcategories',
+            channel='Lojas Americanas',
+            categories_file='category/fixtures/duplicated_categories.csv')
+
+        self.assertEqual(Channel.objects.count(), 1)
+        self.assertEqual(Category.objects.count(), 2)
+        self.assertQuerysetEqual(
+            Category.objects.all(),
+            ['<Category: Books>',
+             '<Category: Games>'],
+            ordered=False)
