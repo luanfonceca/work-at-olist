@@ -8,7 +8,8 @@ from django_extensions.db.fields import AutoSlugField
 class Channel(models.Model):
     name = models.CharField(verbose_name=_('Name'), max_length=255)
     slug = AutoSlugField(
-        verbose_name=_('Slug'), populate_from='name', max_length=260)
+        verbose_name=_('Slug'), populate_from='name', max_length=260,
+        unique=True)
 
     class Meta:
         verbose_name = _('Channel')
