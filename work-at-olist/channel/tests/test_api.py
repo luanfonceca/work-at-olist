@@ -24,10 +24,9 @@ class ChannelTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, [{
-            'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
-            'url': 'http://testserver/channels/lojas-americanas/'
+            'url': 'http://testserver/lojas-americanas/'
         }])
 
     def test_detail_without_categories(self):
@@ -41,10 +40,9 @@ class ChannelTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
-            'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
-            'url': 'http://testserver/channels/lojas-americanas/',
+            'url': 'http://testserver/lojas-americanas/',
             'categories': []
         })
 
@@ -59,35 +57,22 @@ class ChannelTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
-            'id': 1,
-            'name': 'Lojas Americanas',
+            'url': 'http://testserver/lojas-americanas/',
             'slug': 'lojas-americanas',
-            'url': 'http://testserver/channels/lojas-americanas/',
+            'name': 'Lojas Americanas',
             'categories': [{
-                'id': 1,
                 'name': 'Books',
                 'slug': 'books',
                 'url': 'http://testserver/categories/books/',
-                'channel': 'http://testserver/channels/lojas-americanas/',
-                'parents': [],
-                'subcategories': [],
             }, {
-                'id': 2,
                 'name': 'Games',
                 'slug': 'games',
                 'url': 'http://testserver/categories/games/',
-                'channel': 'http://testserver/channels/lojas-americanas/',
-                'parents': [],
-                'subcategories': [],
             }, {
-                'id': 3,
                 'name': 'Computers',
                 'slug': 'computers',
                 'url': 'http://testserver/categories/computers/',
-                'channel': 'http://testserver/channels/lojas-americanas/',
-                'parents': [],
-                'subcategories': [],
-            }]
+            }],
         })
 
     def test_detail_with_nested_categories(self):
@@ -101,41 +86,12 @@ class ChannelTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
-            'id': 1,
             'name': 'Lojas Americanas',
             'slug': 'lojas-americanas',
-            'url': 'http://testserver/channels/lojas-americanas/',
+            'url': 'http://testserver/lojas-americanas/',
             'categories': [{
-                'id': 1,
-                'parents': [],
-                'subcategories': [
-                    'http://testserver/categories/national-literature/'
-                ],
                 'name': 'Books',
                 'slug': 'books',
                 'url': 'http://testserver/categories/books/',
-                'channel': 'http://testserver/channels/lojas-americanas/'
-            }, {
-                'id': 2,
-                'parents': [
-                    'http://testserver/categories/books/'
-                ],
-                'subcategories': [
-                    'http://testserver/categories/science-fiction/'
-                ],
-                'name': 'National Literature',
-                'slug': 'national-literature',
-                'url': 'http://testserver/categories/national-literature/',
-                'channel': 'http://testserver/channels/lojas-americanas/'
-            }, {
-                'id': 3,
-                'parents': [
-                    'http://testserver/categories/national-literature/'
-                ],
-                'subcategories': [],
-                'name': 'Science Fiction',
-                'slug': 'science-fiction',
-                'url': 'http://testserver/categories/science-fiction/',
-                'channel': 'http://testserver/channels/lojas-americanas/'
             }]
         })

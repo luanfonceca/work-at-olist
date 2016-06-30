@@ -12,8 +12,17 @@ class ImportCategoriesCommandTest(TestCase):
             channel='Lojas Americanas',
             categories_file='category/fixtures/categories.csv')
 
+        books = Category.objects.get(slug='books')
+        games = Category.objects.get(slug='games')
+        games2 = Category.objects.get(slug='games-2')
+        xbox_360 = Category.objects.get(slug='xbox-360')
+        games3 = Category.objects.get(slug='games-3')
+        xbox_one = Category.objects.get(slug='xbox-one')
+        computers = Category.objects.get(slug='computers')
+        computers2 = Category.objects.get(slug='computers-2')
+
         self.assertEqual(Channel.objects.count(), 1)
-        self.assertEqual(Category.objects.count(), 18)
+        self.assertEqual(Category.objects.count(), 23)
         self.assertQuerysetEqual(
             Category.objects.all(),
             ['<Category: Books>',
@@ -28,15 +37,19 @@ class ImportCategoriesCommandTest(TestCase):
              '<Category: Games>',
              '<Category: XBOX 360>',
              '<Category: Console>',
+             '<Category: Games>',
              '<Category: Accessories>',
              '<Category: XBOX One>',
+             '<Category: Console>',
+             '<Category: Games>',
+             '<Category: Accessories>',
              '<Category: Playstation 4>',
+             '<Category: Computers>',
              '<Category: Notebooks>',
              '<Category: Tablets>',
              '<Category: Desktop>'],
             ordered=False)
 
-        books = Category.objects.get(slug='books')
         self.assertQuerysetEqual(
             books.subcategories.all(),
             ['<Category: National Literature>',
@@ -44,17 +57,29 @@ class ImportCategoriesCommandTest(TestCase):
              '<Category: Computers>'],
             ordered=False)
 
-        games = Category.objects.get(slug='games')
         self.assertQuerysetEqual(
             games.subcategories.all(),
             ['<Category: XBOX 360>',
              '<Category: XBOX One>',
              '<Category: Playstation 4>'],
             ordered=False)
+        self.assertEqual(games2.parent, xbox_360)
+        self.assertEqual(games3.parent, xbox_one)
+
+        self.assertEqual(computers.parent, books)
         self.assertQuerysetEqual(
-            games.parents.all(),
-            ['<Category: XBOX 360>',
-             '<Category: XBOX One>'],
+            computers.subcategories.all(),
+            ['<Category: Applications>',
+             '<Category: Database>',
+             '<Category: Programming>'],
+            ordered=False)
+
+        self.assertEqual(computers2.parent, None)
+        self.assertQuerysetEqual(
+            computers2.subcategories.all(),
+            ['<Category: Notebooks>',
+             '<Category: Tablets>',
+             '<Category: Desktop>'],
             ordered=False)
 
     def test_channel_argument_required(self):
@@ -155,3 +180,42 @@ class ImportCategoriesCommandTest(TestCase):
         self.assertQuerysetEqual(
             national_literature.subcategories.all(),
             ['<Category: Science Fiction>'])
+
+    def test_duplicated_categories_with_diferent_levels(self):
+        call_command(
+            name='importcategories',
+            channel='Lojas Americanas',
+            categories_file=(
+                'category/fixtures/'
+                'duplicated_categories_with_diferent_levels.csv'))
+
+        games = Category.objects.get(slug='games')
+        games2 = Category.objects.get(slug='games-2')
+        xbox_360 = Category.objects.get(slug='xbox-360')
+        games3 = Category.objects.get(slug='games-3')
+        xbox_one = Category.objects.get(slug='xbox-one')
+
+        self.assertEqual(Channel.objects.count(), 1)
+        self.assertEqual(Category.objects.count(), 10)
+        self.assertQuerysetEqual(
+            Category.objects.all(),
+            ['<Category: Games>',
+             '<Category: XBOX 360>',
+             '<Category: Console>',
+             '<Category: Games>',
+             '<Category: Accessories>',
+             '<Category: XBOX One>',
+             '<Category: Console>',
+             '<Category: Games>',
+             '<Category: Accessories>',
+             '<Category: Playstation 4>'],
+            ordered=False)
+
+        self.assertQuerysetEqual(
+            games.subcategories.all(),
+            ['<Category: XBOX 360>',
+             '<Category: XBOX One>',
+             '<Category: Playstation 4>'],
+            ordered=False)
+        self.assertEqual(games2.parent, xbox_360)
+        self.assertEqual(games3.parent, xbox_one)

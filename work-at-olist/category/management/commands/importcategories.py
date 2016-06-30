@@ -46,9 +46,8 @@ class Command(BaseCommand):
     def get_or_create_category(self, name, parent=None):
         category, created = Category.objects.get_or_create(
             name=name,
-            channel=self.channel)
-        if parent:
-            category.parents.add(parent)
+            channel=self.channel,
+            parent=parent)
         return category
 
     def create_category_from_row(self, row):

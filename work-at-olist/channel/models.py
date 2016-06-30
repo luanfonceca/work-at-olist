@@ -23,3 +23,6 @@ class Channel(models.Model):
             raise IntegrityError('Name is required.')
 
         return super(Channel, self).save(*args, **kwargs)
+
+    def get_first_level_categories(self):
+        return self.categories.filter(parent__isnull=True)

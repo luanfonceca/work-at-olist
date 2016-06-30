@@ -12,17 +12,18 @@ class ChannelTest(APITestCase):
             channel='Lojas Americanas',
             categories_file='category/fixtures/one_level.csv')
 
-        url = reverse('category:detail', kwargs={'slug': 'books'})
+        url = reverse('category:detail', kwargs={
+            'slug': 'books',
+        })
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
-            'id': 1,
             'name': 'Books',
             'slug': 'books',
             'url': 'http://testserver/categories/books/',
-            'channel': 'http://testserver/channels/lojas-americanas/',
-            'parents': [],
+            'channel': 'http://testserver/lojas-americanas/',
+            'parent': None,
             'subcategories': [],
         })
 
@@ -33,20 +34,23 @@ class ChannelTest(APITestCase):
             categories_file='category/fixtures/two_levels.csv')
 
         url = reverse('category:detail', kwargs={
-            'slug': 'national-literature'})
+            'slug': 'national-literature',
+        })
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, {
-            'id': 2,
-            'parents': [
-                'http://testserver/categories/books/'
-            ],
-            'subcategories': [
-                'http://testserver/categories/science-fiction/'
-            ],
             'name': 'National Literature',
             'slug': 'national-literature',
             'url': 'http://testserver/categories/national-literature/',
-            'channel': 'http://testserver/channels/lojas-americanas/'
+            'channel': 'http://testserver/lojas-americanas/',
+            'parent': 'http://testserver/categories/books/',
+            'subcategories': [{
+                'name': 'Science Fiction',
+                'slug': 'science-fiction',
+                'url': 'http://testserver/categories/science-fiction/',
+                'channel': 'http://testserver/lojas-americanas/',
+                'parent': 'http://testserver/categories/national-literature/',
+                'subcategories': [],
+            }],
         })

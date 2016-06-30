@@ -15,9 +15,10 @@ class Category(models.Model):
     channel = models.ForeignKey(
         verbose_name=_('Channel'),
         to='channel.Channel', related_name='categories')
-    parents = models.ManyToManyField(
+    parent = models.ForeignKey(
         verbose_name=_('Parent category'),
-        to='category.Category', related_name='subcategories')
+        to='category.Category', related_name='subcategories',
+        null=True, blank=True)
 
     class Meta:
         verbose_name = _('Category')
